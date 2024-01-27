@@ -2,6 +2,9 @@ class Solution {
 public:
     void solution(int open, int close, string temp, vector<string>& res)
     {
+        // TC :-> O(2^N);
+        // SC :-> O(2^N);
+        
         if(open==0 && close ==0){
             res.push_back(temp);
         }
