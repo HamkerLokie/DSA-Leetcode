@@ -1,35 +1,46 @@
 class Solution {
 public:
-    bool helper(vector<int> arr, int k){
-        int n = arr.size();
-        vector<vector<int>> dp;
-        dp.resize(205,vector<int>(20005,false));
-
-        for(int i=0; i<n; i++) dp[i][0] = true;
-
-        for(int i=n-1; i>=0; i--){
-            for(int j=1; j<=k; j++){
-                if(arr[i]<=j){
-                    dp[i][j] = dp[i+1][j] || dp[i+1][j-arr[i]];
-                }else{
-                    dp[i][j] = dp[i+1][j];
-                }
-                
-            }
-        }
-        return dp[0][k];
-    }
     bool canPartition(vector<int>& arr) {
-
         int n = arr.size();
-
-        int sum = 0;
-        for(int i=0; i<n; i++){
-            sum+=arr[i];
+        int totSum = 0;
+        
+        for(int i = 0; i < n; i++)
+        {
+            totSum += arr[i];
         }
-
-        if(sum%2!=0) return false;
-        else return helper(arr,sum/2);
+        
+        if(totSum % 2 == 1)
+                return false;
+        
+        int k = totSum/2;
+        
+        vector<bool> prev(k+1, false);
+        
+        prev[0] = true;
+        
+        if(arr[0] <= k)
+            prev[arr[0]] = true;
+    
+        for(int i = 1; i < n; i++){
+            vector<bool> curr(k+1,false);
+            curr[0] = true;
+            
+            for(int t = 1; t <= k; t++)
+            {
+                bool notTaken = prev[t];
+                
+                bool taken = false;
+                
+                if(arr[i] <= t)
+                    taken = prev[t - arr[i]];
+                
+                curr[t] = notTaken || taken;
+            }
+            
+            prev = curr;
+        }
+        
+        return prev[k];
         
     }
 };
